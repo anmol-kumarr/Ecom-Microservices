@@ -1,8 +1,8 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { Body, Controller, Inject,  Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './constant';
-import { firstValueFrom } from 'rxjs';
+// import { firstValueFrom } from 'rxjs';
 
 @Controller()
 export class AppController {
@@ -11,13 +11,9 @@ export class AppController {
     @Inject(AUTH_SERVICE) private readonly client: ClientProxy,
   ) { }
 
-  @Get(':id')
-  async getHello(@Param('id') id: string) {
-    
-    const result = await firstValueFrom(this.client.send<number>('user-login', id));
-
-    console.log('Result:', result);
-    return { id, result };
+  @Post('send-otp')
+  sendOtp(@Body() reqBody: { email: string, phoneNumber: number }) {
+    return this.appService.sendOtp(reqBody)
   }
 
 
