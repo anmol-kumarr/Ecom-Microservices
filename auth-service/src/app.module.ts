@@ -8,6 +8,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './constant';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
+import { RedisService } from './redis.service';
 
 
 
@@ -48,6 +49,6 @@ import { MailService } from './mail.service';
     AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService,MailService],
+  providers: [AppService,MailService,RedisService],
 })
 export class AppModule { }
