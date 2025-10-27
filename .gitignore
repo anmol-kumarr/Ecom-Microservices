@@ -1,0 +1,189 @@
+# Common OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime / env
+.env
+.env.*.local
+.env.local
+.env.*.backup
+*.pem
+secrets/
+*.key
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+.nuxt/
+.eslintcache
+.cache/
+yarn.lock    # optional: keep if you want to track it; remove this line to ignore
+.pnpm-store/
+npm-packages/
+
+# Java / JVM
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+/.gradle/
+/.gradle/
+/.idea/
+
+# Maven wrapper/cache
+.mvn/
+dependency-reduced-pom.xml
+
+# Gradle
+.gradle/
+build/
+.gradle-test-kit/
+
+# IntelliJ / JetBrains
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Visual Studio / .NET
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+*.nupkg
+packages/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+pip-log.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Go
+bin/
+*.exe
+*.test
+*.out
+vendor/
+Godeps/
+
+# Ruby
+*.gem
+# Prisma
+.prisma/
+node_modules/.prisma/
+prisma/dev.db
+prisma/.env
+# if you generate client into the prisma folder and don't want to commit it:
+prisma/client/
+.bundle/
+vendor/bundle
+log/
+tmp/
+*.pid
+*.seed
+*.sqlite3
+
+# Docker / Compose / Kubernetes / Helm
+docker-compose.override.yml
+.docker/
+docker-compose.local.yml
+docker-compose.*.local.yml
+docker-compose.*.override.yml
+*.compose.*.yml
+*.log
+docker/*.tmp
+**/Dockerfile.*
+.kube/
+kubeconfig
+*.kubeconfig
+helm-values.local.yaml
+charts/*.tgz
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+*.tfvars
+
+# CI / CD
+.jenkins/
+.github/workflows/*.local.yml
+.gitattributes.local
+
+# Test reports / coverage
+coverage/
+coverage.* 
+TestResults/
+junit*.xml
+reports/
+test-reports/
+
+# Editors
+.vscode/
+*.code-workspace
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary / build files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Database
+*.sqlite3
+*.db
+*.db-journal
+
+# Package managers / lock files (adjust if you want to track lock files)
+# Uncomment to ignore lockfiles if desired:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Misc
+coverage/
+local-credentials.json
+local-*.yml
+/.envrc
+.envrc.local
