@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
 import appConfig from './config/app.config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './constant';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
 import { RedisService } from './redis.service';
+import { PrismaService } from './prisma.service';
 
 
 
@@ -45,10 +45,9 @@ import { RedisService } from './redis.service';
         },
       }
 
-    }),
-    AuthModule
+    })
   ],
   controllers: [AppController],
-  providers: [AppService,MailService,RedisService],
+  providers: [AppService,MailService,RedisService,PrismaService],
 })
 export class AppModule { }

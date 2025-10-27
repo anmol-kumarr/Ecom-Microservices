@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -17,7 +17,7 @@ datasource db {
 
 model user{
   id Int @id() @default(autoincrement())
-  mobileNumber Int 
-  email String 
-  otp Int
+  mobileNumber Int?
+  email String?
+  
 }
