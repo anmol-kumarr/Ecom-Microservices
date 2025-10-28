@@ -9,6 +9,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
 import { RedisService } from './redis.service';
 import { PrismaService } from './prisma.service';
+import { JwtModule } from '@nestjs/jwt';
 
 
 
@@ -37,7 +38,7 @@ import { PrismaService } from './prisma.service';
         port: 587,
         secure: false,
         auth: {
-          user:process.env.MAIL_USER,
+          user: process.env.MAIL_USER,
           pass: process.env.MAIL_PASS
         },
         defaults: {
@@ -45,9 +46,14 @@ import { PrismaService } from './prisma.service';
         },
       }
 
-    })
+    }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'defaultSecret',
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService,MailService,RedisService,PrismaService],
+  providers: [AppService, MailService, RedisService, PrismaService],
 })
 export class AppModule { }

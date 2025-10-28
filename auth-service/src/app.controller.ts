@@ -1,7 +1,8 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './constant';
+import { Response } from 'express';
 // import { firstValueFrom } from 'rxjs';
 
 @Controller()
@@ -17,8 +18,8 @@ export class AppController {
   }
 
   @Post('verify-otp')
-  verifyOtp(@Body() reqBody:{email:string,phoneNumber:number,otp:string}){
-    return this.appService.verifyOtp(reqBody)
+  verifyOtp(@Body() reqBody: { email: string, phoneNumber: number, otp: string }, @Res({ passthrough: true }) res: Response) {
+    return this.appService.verifyOtp(reqBody, res)
   }
 
 

@@ -12,7 +12,7 @@ export class AppController {
     return 'hello world'
   }
 
-  @MessagePattern('user-login')
+  @MessagePattern('user-auth')
   handleUserLogin(@Payload() data: string) {
     console.log('Received data:', data);
     const num = Number(data);
