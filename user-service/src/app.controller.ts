@@ -2,20 +2,29 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
+import { PrismaService } from './prisma.service';
+
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService, private readonly prisma: PrismaService) { }
 
 
   @Get()
   first() {
     return 'hello world'
   }
+  
 
-  @MessagePattern('user-auth')
-  handleUserLogin(@Payload() data: string) {
-    console.log('Received data:', data);
-    const num = Number(data);
-    return num + 1;
+  @MessagePattern('user-created')
+  async handleUserCreation(@Payload() data: { id: number, email: string, password: string, mobileNumber: number }) {
+    console.log('Received user-created event:', data);
+    await this.prisma.user.create({
+      data: {
+        id: data.id,
+        email: data.email,
+        phoneNumber: data.mobileNumber
+      }
+    });
+
   }
 }

@@ -1,1 +1,1 @@
-export const AUTH_SERVICE = 'user-service'
+export const USER_SERVICE = 'user-service'

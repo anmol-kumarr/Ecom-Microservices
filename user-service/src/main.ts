@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+// import { AppModule } from './app.module';
 import {  Transport } from '@nestjs/microservices';
+import { AppModule } from './app.module.js';
 
 
 async function bootstrap() {
@@ -27,7 +28,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [process.env.RABBIT_MQ_URL],
-      queue: 'user_queue',
+      queue: process.env.USER_QUEUE || 'user_queue',
       queueOptions: {
         durable: true
       }

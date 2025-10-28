@@ -4,7 +4,7 @@ import { BadRequestException, HttpException, Inject, Injectable, InternalServerE
 import { RedisService } from './redis.service';
 import { PrismaService } from './prisma.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_SERVICE, NOTIFICATION_SERVICE } from './constant';
+import {  NOTIFICATION_SERVICE, USER_SERVICE } from './constant';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 
@@ -15,8 +15,7 @@ export class AppService {
 
   constructor(private readonly prismaService: PrismaService,
     private redisService: RedisService,
-    // private mailService: MailService,
-    @Inject(AUTH_SERVICE) private readonly mailClient: ClientProxy,
+    @Inject(USER_SERVICE) private readonly userClient: ClientProxy,
     @Inject(NOTIFICATION_SERVICE) private readonly notificationClient: ClientProxy,
     private readonly jwtService: JwtService
   ) { }
@@ -62,13 +61,13 @@ export class AppService {
 
         const checkUser = await this.prismaService.user.findFirst({ where: { email: verifyOtp.email } })
 
-        console.log('checkUser', checkUser)
+
 
         if (checkUser) {
           await this.generateToken({ email: checkUser?.email || '', sub: checkUser.id }, res);
         } else {
           const data = await this.prismaService.user.create({ data: { email: verifyOtp.email } })
-          this.mailClient.emit('user-auth', data);
+          this.userClient.emit('user-created', data);
           await this.generateToken({ email: data.email || '', sub: data.id }, res);
         }
 
@@ -97,12 +96,14 @@ export class AppService {
     const token = await this.jwtService.signAsync(payload);
 
 
-    return res.cookie('token', token, {
+    res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
     })
+
+    return { message: 'Token generated successfully' };
 
   }
 }

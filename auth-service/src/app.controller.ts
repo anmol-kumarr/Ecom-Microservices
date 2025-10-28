@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_SERVICE } from './constant';
+
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { USER_SERVICE } from './constant';
 
 // import { firstValueFrom } from 'rxjs';
 
@@ -11,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject(AUTH_SERVICE) private readonly client: ClientProxy,
+    @Inject(USER_SERVICE) private readonly client: ClientProxy,
     private readonly jwtService: JwtService
   ) { }
 
