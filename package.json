@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently --names \"AUTH,PRODUCT,CART,USER\" -c \"cyan,magenta,yellow,green\" \"npm run start:dev --prefix auth-service\" \"npm run start:dev --prefix product-service\" \"npm run start:dev --prefix cart-service\" \"npm run start:dev --prefix user-service\""
+    "dev": "concurrently --names \"AUTH,NOTIFICATION\" -c \"cyan,magenta,yellow,green\" \"npm run start:dev --prefix auth-service\" \"npm run start:dev --prefix notification-service\""
   },
   "keywords": [],
   "author": "",
@@ -12,5 +12,13 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/microservices": "^11.1.8",
+    "amqp-connection-manager": "^5.0.0",
+    "amqplib": "^0.10.9"
   }
 }
+

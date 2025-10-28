@@ -1,8 +1,10 @@
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './constant';
 import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+
 // import { firstValueFrom } from 'rxjs';
 
 @Controller()
@@ -10,7 +12,18 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     @Inject(AUTH_SERVICE) private readonly client: ClientProxy,
+    private readonly jwtService: JwtService
   ) { }
+
+
+  @Get()
+  getHello() {
+    return 'Auth Service is running';
+    
+    };
+
+    
+
 
   @Post('send-otp')
   sendOtp(@Body() reqBody: { email: string, phoneNumber: number }) {

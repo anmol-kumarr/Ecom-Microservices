@@ -1,10 +1,10 @@
 import { BadRequestException, HttpException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { MailService } from './mail.service';
+
 
 import { RedisService } from './redis.service';
 import { PrismaService } from './prisma.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_SERVICE } from './constant';
+import { AUTH_SERVICE, NOTIFICATION_SERVICE } from './constant';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 
@@ -15,19 +15,26 @@ export class AppService {
 
   constructor(private readonly prismaService: PrismaService,
     private redisService: RedisService,
-    private mailService: MailService,
-    @Inject(AUTH_SERVICE) private readonly client: ClientProxy,
+    // private mailService: MailService,
+    @Inject(AUTH_SERVICE) private readonly mailClient: ClientProxy,
+    @Inject(NOTIFICATION_SERVICE) private readonly notificationClient: ClientProxy,
     private readonly jwtService: JwtService
   ) { }
 
-  async sendOtp(sendOtp: { email: string, phoneNumber: number }) {
+  sendOtp(sendOtp: { email: string, phoneNumber: number }) {
     try {
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString()
       const ttl = 1000 * 60 * 2
 
-      await this.redisService.set(sendOtp.email, otp, ttl)
-      await this.mailService.sendOtp(sendOtp.email, otp)
+      this.redisService
+        .set(sendOtp.email, otp, ttl)
+        .catch(err => console.error('Redis set error:', err));
+
+
+      this.notificationClient.emit("notification-otp", { type: 'otp', method: 'email', recipient: sendOtp.email, content: otp });
+
+      return { message: 'OTP sent successfully' }
 
     } catch (err) {
       console.log(err)
@@ -41,6 +48,11 @@ export class AppService {
 
   async verifyOtp(verifyOtp: { email: string, phoneNumber: number, otp: string }, res: Response) {
     try {
+
+      if (!verifyOtp.email && !verifyOtp.phoneNumber) {
+        throw new BadRequestException({ message: 'Email or phone number is required' });
+      }
+
       const otp = await this.redisService.get(verifyOtp.email);
       if (Number(otp) !== Number(verifyOtp.otp)) {
         throw new BadRequestException({ message: 'Invalid OTP' });
@@ -53,11 +65,11 @@ export class AppService {
         console.log('checkUser', checkUser)
 
         if (checkUser) {
-          this.generateToken({ email: checkUser?.email || '', sub: checkUser.id }, res);
+          await this.generateToken({ email: checkUser?.email || '', sub: checkUser.id }, res);
         } else {
           const data = await this.prismaService.user.create({ data: { email: verifyOtp.email } })
-          this.client.emit('user-auth', data);
-          this.generateToken({ email: data.email || '', sub: data.id }, res);
+          this.mailClient.emit('user-auth', data);
+          await this.generateToken({ email: data.email || '', sub: data.id }, res);
         }
 
 
@@ -79,13 +91,13 @@ export class AppService {
     }
   }
 
-  generateToken({ email, sub }: { email: string; sub: number }, res: Response) {
+  async generateToken({ email, sub }: { email: string; sub: number }, res: Response) {
     const payload = { email, sub };
 
-    const token = this.jwtService.signAsync(payload);
+    const token = await this.jwtService.signAsync(payload);
 
 
-    return res.cookie('access_token', token, {
+    return res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
