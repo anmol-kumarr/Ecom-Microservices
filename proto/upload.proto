@@ -1,0 +1,29 @@
+syntax="proto3";
+
+package upload;
+
+message UploadMeta {
+  string filename = 1;
+  string content_type = 2;
+  int64 total_size = 3;      // optional total bytes
+  string upload_id = 4;      // client generated or server returned for resumability
+  string checksum = 5;       // e.g. sha256 hex
+}
+
+message UploadChunk {
+  bytes chunk_data = 1;
+  int64 offset = 2;          // optional: byte offset for resumability
+  UploadMeta meta = 3;       // optional: include meta in first chunk
+}
+
+
+message UploadResult {
+  bool success = 1;
+  string message = 2;
+  string file_id = 3;
+}
+
+service FileService {
+  // client sends a stream of UploadChunk, server returns final UploadResult
+  rpc Upload(stream UploadChunk) returns (UploadResult);
+}

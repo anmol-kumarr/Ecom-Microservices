@@ -33,6 +33,7 @@ model Product {
   relevantKeywords String[]
   category String
   imageUrl String[]
+  coverImageUrl String
   faq Json[]
   dressType String?
   createdAt DateTime @default(now())
