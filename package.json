@@ -14,6 +14,8 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.0",
+    "@grpc/proto-loader": "^0.8.0",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/config": "^4.0.2",
     "@nestjs/microservices": "^11.1.8",
@@ -21,4 +23,3 @@
     "amqplib": "^0.10.9"
   }
 }
-

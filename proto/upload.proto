@@ -1,29 +1,28 @@
-syntax="proto3";
+syntax "proto3";
 
 package upload;
 
-message UploadMeta {
+service UploadService{
+  rpc UploadFile(GetUploadFile) return (ReturnUploadFile) {}
+}
+
+message GetUploadFile {
   string filename = 1;
-  string content_type = 2;
-  int64 total_size = 3;      // optional total bytes
-  string upload_id = 4;      // client generated or server returned for resumability
-  string checksum = 5;       // e.g. sha256 hex
+  bytes chunk_data = 2;
+  int64 offset = 3; // byte offset of this chunk within the file
+  int64 total_size = 4; // total file size in bytes (if known)
+  string content_type = 5;
+  bool is_last = 6; // true for the final chunk of that file
+  string upload_id = 7; // client- or server-generated upload session id
+  int32 chunk_size = 8; // length of chunk_data in bytes
 }
 
-message UploadChunk {
-  bytes chunk_data = 1;
-  int64 offset = 2;          // optional: byte offset for resumability
-  UploadMeta meta = 3;       // optional: include meta in first chunk
+// Wrapper to send an array (multiple files). Use this as the RPC request
+// if you want to send whole files (or per-file chunk streams).
+message UploadFiles {
+  repeated GetUploadFile files = 1;
 }
 
-
-message UploadResult {
-  bool success = 1;
-  string message = 2;
-  string file_id = 3;
-}
-
-service FileService {
-  // client sends a stream of UploadChunk, server returns final UploadResult
-  rpc Upload(stream UploadChunk) returns (UploadResult);
+message ReturnUploadFile {
+  repeated string urls = 1;
 }
